@@ -1,0 +1,2 @@
+#define AirLattice_VERSION_MAJOR @AirLattice_VERSION_MAJOR@
+#define AirLattice_VERSION_MINOR @AirLattice_VERSION_MINOR@
