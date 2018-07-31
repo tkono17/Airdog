@@ -53,7 +53,7 @@ void EnvRecorder::saveXZ(int iy, int timestep, PropertyType pt) {
   ny = np[1];
   nz = np[2];
 
-  std::sprintf(hname, "h_%s_XZ_x%04d_t%04d", 
+  std::sprintf(hname, "h_%s_XZ_y%04d_t%04d", 
 	       propertyName(pt).c_str(), iy, timestep);
   TH2F* h = new TH2F(hname, "", nx, 0, nx, nz, 0, nz);
   h->SetDirectory(mOutFile);
@@ -124,14 +124,19 @@ void EnvRecorder::saveYZ(int ix, int timestep, PropertyType pt) {
 }
 
 void EnvRecorder::saveSet1(int timestep) {
+  // Surface XY
   saveXY(0, timestep, kRho);
   saveXY(0, timestep, kP);
   saveXY(0, timestep, kT);
   saveXY(0, timestep, kU);
   saveXY(0, timestep, kV);
   saveXY(0, timestep, kW);
+  // XZ
   saveXZ(0, timestep, kRho);
   saveXZ(0, timestep, kP);
   saveXZ(0, timestep, kT);
+  saveXZ(0, timestep, kU);
+  saveXZ(0, timestep, kV);
+  saveXZ(0, timestep, kW);
 }
 

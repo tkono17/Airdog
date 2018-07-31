@@ -1,6 +1,7 @@
 /*
   SurfaceState.cxx
 */
+#include <iostream>
 #include "AirLattice/SurfaceState.hxx"
 
 SurfaceState::SurfaceState() {
@@ -17,6 +18,8 @@ int SurfaceState::allocateData(int nx, int ny) {
   mNPoints[0] = nx;
   mNPoints[1] = ny;
   int ix;
+
+  std::cout << "Allocating memory for surface data" << std::endl;
 
   mSurfaceData = new SurfaceProperty*[mNPoints[0]];
 
@@ -37,6 +40,7 @@ int SurfaceState::freeData() {
     }
     delete [] mSurfaceData;
   }
+  mSurfaceData = 0;
   return 0;
 }
 

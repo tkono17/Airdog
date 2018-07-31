@@ -3,6 +3,9 @@
 /*
   SystemControl.hxx
 */
+#include <set>
+#include <string>
+#include <functional>
 #include "AirLattice/Environment.hxx"
 #include "AirLattice/EnvRecorder.hxx"
 
@@ -11,6 +14,8 @@ public:
   SystemControl();
   SystemControl(Environment* env, double dt, double ntimepoints);
   ~SystemControl();
+
+  double elementVolume() const { return mDeltaX*mDeltaY*mDeltaZ; }
 
   void setNTimePoints(int x) { mNTimePoints = x; }
 
@@ -24,16 +29,36 @@ public:
   Environment* environment() { return mEnvironment; }
   const Environment* environment() const { return mEnvironment; }
 
+  void setInitialConditions(const std::set<std::string>& conds) {
+    mInitialConditions = conds;
+  }
+  void setBoundaryConditions(const std::set<std::string>& conds) {
+    mBoundaryConditions = conds;
+  }
+  const std::set<std::string>& initialConditions() const {
+    return mInitialConditions;
+  }
+  const std::set<std::string>& boundaryConditions() const {
+    return mBoundaryConditions;
+  }
+
   void updateEnvironment(float dt);
 
   int initialize();
   int run();
 
 protected:
+  void applyInitialConditions();
   void updateDensity(); // Continuity equation
   void updateTemperature(); // Heat flow
-  void updatePressure(); // State equation
+  void updatePressure(); // Equation of state
   void updateVelocity(); // Navier-Stokes equation
+  void applyBoundaryConditions();
+  void updateVariables();
+
+  void loop(std::mem_fun_t<void, SystemControl> action);
+
+  void uniformHotspot1();
 
 private:
   double mNTimePoints;
@@ -43,6 +68,9 @@ private:
 
   Environment* mEnvironment;
   EnvRecorder* mRecorder;
+
+  std::set<std::string> mInitialConditions;
+  std::set<std::string> mBoundaryConditions;
 
   // Common derived quantities
   double mAreaYZ;
@@ -60,6 +88,8 @@ private:
   AirProperty* mAPy2;
   AirProperty* mAPz1;
   AirProperty* mAPz2;
+
+  bool mDoPrint;
 };
 
 #endif // __SystemControl_hxx__

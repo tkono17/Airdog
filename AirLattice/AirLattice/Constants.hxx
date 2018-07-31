@@ -16,7 +16,8 @@ public:
 
   static double g;
   static double R;
-  static double Cp;
+  static double T0;
+  static double Cp_Air;
 
   static double MolecularWeight_N2;
   static double MolecularWeight_O2;

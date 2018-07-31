@@ -19,6 +19,10 @@ public:
   void setNPoints(int nx, int ny, int nz);
   void setSystemSize(double sx, double sy, double sz);
 
+  double x(int index) const { return mElementSize[0]*index; }
+  double y(int index) const { return mElementSize[1]*index; }
+  double z(int index) const { return mElementSize[2]*index; }
+
   const int* NPoints() const { return mNPoints; }
   const double* systemSize() const { return mSystemSize; }
   const double* elementSize() const { return mElementSize; }

@@ -13,6 +13,8 @@ public:
   int allocateData(int nx, int ny, int nz);
   int freeData();
 
+  const int* NPoints() const { return mNPoints; }
+
   AirProperty& propertyAt(int ix, int iy, int iz);
   const AirProperty& propertyAt(int ix, int iy, int iz) const;
 

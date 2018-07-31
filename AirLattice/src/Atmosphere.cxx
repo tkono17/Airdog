@@ -1,6 +1,7 @@
 /*
   Atmosphere.cxx
 */
+#include <iostream>
 #include "AirLattice/Atmosphere.hxx"
 #include "AirLattice/AirProperty.hxx"
 
@@ -21,6 +22,8 @@ int Atmosphere::allocateData(int nx, int ny, int nz) {
   mNPoints[2] = nz;
 
   int ix, iy;
+
+  std::cout << "Allocating memory for atmosphere data" << std::endl;
 
   mFieldData = new AirProperty**[mNPoints[0]];
 
@@ -50,6 +53,7 @@ int Atmosphere::freeData() {
     }
     delete [] mFieldData;
   }
+  mFieldData = 0;
   return 0;
 }
 
