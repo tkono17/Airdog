@@ -70,9 +70,8 @@ void AirProperty::updateVariables() {
 }
 
 void AirProperty::print() const {
-  std::cout << "AirProperty" << std::endl;
-  std::cout << "  P, T, Rho=" << P() << ", " << T() << ", " << rho() 
-	    << std::endl;
-  std::cout << "  (u, v, w)=(" << u() << ", " << v() << ", " << w() << ")" 
+  std::cout << "AirProperty: " 
+	    << "P=" << P() << ", T=" << T() << ", rho=" << rho() 
+	    << ", (u, v, w)=(" << u() << ", " << v() << ", " << w() << ")" 
 	    << std::endl;
 }

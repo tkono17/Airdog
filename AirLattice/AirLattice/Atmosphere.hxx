@@ -23,7 +23,7 @@ public:
 private:
   int mNPoints[3];
 
-  AirProperty*** mFieldData;
+  AirProperty*** mFieldData; // 3 dimensional array of properties
 
 };
 

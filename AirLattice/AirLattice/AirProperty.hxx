@@ -5,6 +5,7 @@
 */
 #include <map>
 #include "AirLattice/PropertyType.hxx"
+#include "AirLattice/CellBoundaryCondition.hxx"
 
 class AirProperty {
 public:
@@ -18,6 +19,9 @@ public:
   double rho() const { return density(); }
   double rhoSI() const { return rho()*1.0E+3; }
   double molDensitySI() const;
+  double rhoU() const { return rho()*u(); }
+  double rhoV() const { return rho()*v(); }
+  double rhoW() const { return rho()*w(); }
 
   double temperature() const { return mTemperature; }
   double T() const { return temperature(); }
@@ -46,6 +50,15 @@ public:
   
   void setDensityFromPT();
 
+  CellBoundaryCondition& cellBoundaryCondition() {
+    return mCellBC;
+  }
+
+  const CellBoundaryCondition& cellBoundaryCondition() const {
+    return mCellBC;
+  }
+
+
   // Material characteristic
   void setMolecularWeight(double x) { mMolecularWeight = x; }
   void setSpecificHeat(double x) { mSpecificHeat = x; }
@@ -58,11 +71,11 @@ public:
 
 private:
   // Dynamical properties
-  double mPressure; // hPa
+  double mPressure; // Pa
   double mDensity; // g/cm3
   double mTemperature; // K
   double mVelocity[3]; // m/s
-  double mVaporPressure; // hPa
+  double mVaporPressure; // Pa
   double mWaterDensity; // g/cm3
 
   // Material characteristic
@@ -73,6 +86,8 @@ private:
   // Temporary variable holder
   std::map<int, double> mVariableHolder;
 
+  // Boundary condition
+  CellBoundaryCondition mCellBC;
 };
 
 #endif // __AirProperty_hxx__

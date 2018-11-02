@@ -11,6 +11,11 @@
 
 class SystemControl {
 public:
+  enum boundary_t {
+    kXl, kXh, kYl, kYh, kZl, kZh
+  };
+
+public:
   SystemControl();
   SystemControl(Environment* env, double dt, double ntimepoints);
   ~SystemControl();
@@ -42,25 +47,72 @@ public:
     return mBoundaryConditions;
   }
 
-  void updateEnvironment(float dt);
+  virtual void updateEnvironment(float dt);
 
-  int initialize();
-  int run();
+  virtual int initialize();
+  virtual int run();
+
+  bool setDoPrint(bool x) { mDoPrint = x; }
 
 protected:
-  void applyInitialConditions();
-  void updateDensity(); // Continuity equation
-  void updateTemperature(); // Heat flow
-  void updatePressure(); // Equation of state
-  void updateVelocity(); // Navier-Stokes equation
-  void applyBoundaryConditions();
-  void updateVariables();
+  virtual void applyInitialConditions();
+  virtual void updateDensity(); // Continuity equation
+  virtual void updateTemperature(); // Heat flow
+  virtual void updatePressure(); // Equation of state
+  virtual void updateVelocity(); // Navier-Stokes equation
+  virtual void applyBoundaryConditions();
+  virtual void updateVariables();
 
-  void loop(std::mem_fun_t<void, SystemControl> action);
+  virtual void loop(std::mem_fun_t<void, SystemControl> action);
 
   void uniformHotspot1();
 
-private:
+  double d(std::const_mem_fun_t<double, AirProperty> var, 
+	   AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+	   double dx, 
+	   double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double dForward(std::const_mem_fun_t<double, AirProperty> var, 
+		  AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+		  double dx, 
+		  double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+  
+  double dBackward(std::const_mem_fun_t<double, AirProperty> var, 
+		   AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+		   double dx, 
+		   double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double d2(std::const_mem_fun_t<double, AirProperty> var, 
+	    AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+	    double dx, 
+	    double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double vd(std::const_mem_fun_t<double, AirProperty> var, 
+	    AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+	    double v, double dx, 
+	    double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double vd(std::const_mem_fun_t<double, AirProperty> var, double bzl, double bzh);
+
+  double laplacian(std::const_mem_fun_t<double, AirProperty> var, 
+		   double bzl, double bzh);
+
+  double d_d(std::const_mem_fun_t<double, AirProperty> var, 
+	     AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+	     double dx, 
+	     double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double vd_d(std::const_mem_fun_t<double, AirProperty> var, 
+	      AirProperty* s0, AirProperty* sm, AirProperty* sp, 
+	      double v, double dx, 
+	      double mBoundaryValue=0.0, double pBoundaryValue=0.0);
+
+  double vd_d(std::const_mem_fun_t<double, AirProperty> var, double bzl, double bzh);
+
+  bool isAtInnerSite() const;
+  bool isAtBoundarySite(boundary_t bt) const;
+
+protected:
   double mNTimePoints;
   double mDeltaTime;
   int mTimeStep;
