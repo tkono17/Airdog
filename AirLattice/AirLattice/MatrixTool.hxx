@@ -17,6 +17,11 @@ int solveGausJordan(SparseMatrix& m, std::vector<double>& b);
  */
 int solveGausJordanBand3(SparseMatrix& m, std::vector<double>& b);
 
+/**
+   Solve the matrix equation m*x = b by Gaus-Seidel method.
+ */
+int solveGausSeidel(SparseMatrix& m, std::vector<double>& b);
+
 void printMatrix(const SparseMatrix& m);
 
 void printVector(const std::vector<double>& v);

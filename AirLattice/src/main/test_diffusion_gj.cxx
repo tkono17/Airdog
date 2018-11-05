@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
   const double Tl=20.0;
   const double Tr=20.0;
 
-  TFile* f = TFile::Open("diff_gf.root", "RECREATE");
+  TFile* f = TFile::Open("diffusion_gj.root", "RECREATE");
   TH1* hists[n+1];
 
   double kappa=0.0241; // J.K-1.m-1.s-1

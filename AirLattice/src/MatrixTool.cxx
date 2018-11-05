@@ -1,6 +1,7 @@
 /*
   MatrixTool.cxx
 */
+#include <cmath>
 #include <iostream>
 #include "AirLattice/MatrixTool.hxx"
 
@@ -103,6 +104,54 @@ int solveGausJordanBand3(SparseMatrix& m, std::vector<double>& b) {
       b[j] -= f*b[i];
     }
   }
+  return ok;
+}
+
+int solveGausSeidel(SparseMatrix& m, std::vector<double>& b) {
+  int ok=0;
+  int ntry_max=10000;
+  const double eps=1.0E-8;
+  int itry=0;
+  bool done=false;
+
+  int n = b.size();
+  int i, j;
+  double y=0.0;
+  double x2=0.0;
+  double dx=0.0, dxmax=0.0;
+
+  std::vector<double> x;
+  x.assign(n, 1.0);
+  std::vector<int> columns;
+  std::vector<int>::const_iterator pc;
+
+  while (!done) {
+    dxmax = 0.0;
+    for (i=0; i<n; ++i) {
+      y = b[i];
+      SparseVector& sv = m.rowVector(i);
+      columns = sv.columnsWithValues();
+      for (pc=columns.begin(); pc!=columns.end(); ++pc) {
+	j = *pc;
+	if (j != i) {
+	  y -= sv.getValue(j)*x[j];
+	}
+      }
+      x2 = y/m.getValue(i, i);
+      dx = x2 - x[i];
+      if (std::fabs(dx) > dxmax) dxmax = dx;
+      x[i] = x2;
+    }
+    if (dxmax < eps) done = true;
+
+    itry ++;
+    if (itry >= ntry_max) done = true;
+  }
+
+  for (i=0; i<n; ++i) {
+    b[i] = x[i];
+  }
+
   return ok;
 }
 
