@@ -18,6 +18,8 @@ public:
 
   std::vector<int> columnsWithValues() const;
 
+  void clear();
+
 protected:
   std::map<int, double> mElements;
 };

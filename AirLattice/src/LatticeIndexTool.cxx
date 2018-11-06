@@ -24,6 +24,12 @@ int LatticeIndexTool::initialize(Environment* env) {
 }
 
 int LatticeIndexTool::indexOfCell(int ix, int iy, int iz) const {
+  if (ix < 0) ix += mNx;
+  if (iy < 0) iy += mNy;
+  if (iz < 0) iz += mNz;
+  if (ix > (mNx-1) ) ix -= mNx;
+  if (iy > (mNy-1) ) iy -= mNy;
+  if (iz > (mNz-1) ) iz -= mNz;
   return ( (ix*mNy + iy)*mNz + iz);
 }
 

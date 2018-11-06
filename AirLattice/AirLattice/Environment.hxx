@@ -30,6 +30,12 @@ public:
   int initialize();
 
   double propertyValue(int ix, int iy, int iz, PropertyType pt) const;
+  double rho(int ix, int iy, int iz) const;
+  double P(int ix, int iy, int iz) const;
+  double theta(int ix, int iy, int iz) const;
+  double u(int ix, int iy, int iz) const;
+  double v(int ix, int iy, int iz) const;
+  double w(int ix, int iy, int iz) const;
 
   int freeData();
 

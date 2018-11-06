@@ -54,3 +54,7 @@ std::vector<int> SparseVector::columnsWithValues() const {
   }
   return v;
 }
+
+void SparseVector::clear() {
+  mElements.clear();
+}

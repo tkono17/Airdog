@@ -3,6 +3,7 @@
 */
 #include <iostream>
 #include "AirLattice/SparseMatrix.hxx"
+#include "AirLattice/SparseVector.hxx"
 
 SparseMatrix::SparseMatrix() {
 }
@@ -27,5 +28,12 @@ double SparseMatrix::getValue(int row, int col) const {
 
 bool SparseMatrix::hasValue(int row, int col) const {
   return mRowVectors[row].hasValue(col);
+}
+
+void SparseMatrix::clear() {
+  std::vector<SparseVector>::iterator p;
+  for (p=mRowVectors.begin(); p!=mRowVectors.end(); ++p) {
+    p->clear();
+  }
 }
 

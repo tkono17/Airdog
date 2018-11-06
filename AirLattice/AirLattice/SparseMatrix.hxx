@@ -24,6 +24,8 @@ public:
 
   SparseVector& rowVector(int row) { return mRowVectors[row]; }
 
+  void clear();
+
 protected:
   int mNRows;
   int mNColumns;

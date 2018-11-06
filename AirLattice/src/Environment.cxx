@@ -93,6 +93,94 @@ double Environment::propertyValue(int ix, int iy, int iz,
   return value;
 }
 
+double Environment::rho(int ix, int iy, int iz) const {
+  double value=0.0;
+  return value;
+}
+
+double Environment::P(int ix, int iy, int iz) const {
+  double value=0.0;
+  ix = (ix + mNPoints[0])%mNPoints[0];
+  iy = (iy + mNPoints[1])%mNPoints[1];
+  if (iz >= 0 && iz <= (mNPoints[2]-1) ) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
+    value = p1.P();
+  } else if (iz==-1) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, 0);
+    value = p1.P();
+  } else if (iz == mNPoints[2]) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, mNPoints[2]-1);
+    value = p1.P();
+  }
+  return value;
+}
+
+double Environment::theta(int ix, int iy, int iz) const {
+  double value=0.0;
+  ix = (ix + mNPoints[0])%mNPoints[0];
+  iy = (iy + mNPoints[1])%mNPoints[1];
+  if (iz >= 0 && iz <= (mNPoints[2]-1) ) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
+    value = p1.T();
+  } else if (iz==-1) {
+    const SurfaceProperty& p2 = mSurfaceState.propertyAt(ix, iy);
+    value = p2.T();
+  } else if (iz == mNPoints[2]) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, mNPoints[2]-1);
+    value = p1.T();
+  }
+  return value;
+}
+
+double Environment::u(int ix, int iy, int iz) const {
+  double value=0.0;
+  ix = (ix + mNPoints[0])%mNPoints[0];
+  iy = (iy + mNPoints[1])%mNPoints[1];
+  if (iz >= 0 && iz <= (mNPoints[2]-1) ) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
+    value = p1.u();
+  } else if (iz==-1) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, 0);
+    value = -p1.u();
+  } else if (iz == mNPoints[2]) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, mNPoints[2]-1);
+    value = -p1.u();
+  }
+  return value;
+}
+
+double Environment::v(int ix, int iy, int iz) const {
+  double value=0.0;
+  ix = (ix + mNPoints[0])%mNPoints[0];
+  iy = (iy + mNPoints[1])%mNPoints[1];
+  if (iz >= 0 && iz <= (mNPoints[2]-1) ) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
+    value = p1.v();
+  } else if (iz==-1) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, 0);
+    value = -p1.v();
+  } else if (iz == mNPoints[2]) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, mNPoints[2]-1);
+    value = -p1.v();
+  }
+  return value;
+}
+
+double Environment::w(int ix, int iy, int iz) const {
+  double value=0.0;
+  ix = (ix + mNPoints[0])%mNPoints[0];
+  iy = (iy + mNPoints[1])%mNPoints[1];
+  if (iz >= 0 && iz < (mNPoints[2]-1) ) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
+    value = p1.w();
+  } else if (iz==-1) {
+    value = 0.0;
+  } else if (iz >= (mNPoints[2]-1) ) {
+    value = 0.0;
+  }
+  return value;
+}
+
 void Environment::dump() {
 }
 
