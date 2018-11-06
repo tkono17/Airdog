@@ -13,8 +13,8 @@ int main(int argc, char* argv[]) {
   SystemControlMAC sc;
 
   //  env.setSystemSize(100.0E+3, 1.0, 50.0E+3);
-  env.setSystemSize(3.0, 1.0, 3.0);
-  env.setNPoints(3, 1, 3);
+  env.setSystemSize(10.0, 1.0, 10.0);
+  env.setNPoints(100, 1, 100);
 
   sc.setEnvironment(&env);
   sc.setRecorder(&recorder);
@@ -28,12 +28,11 @@ int main(int argc, char* argv[]) {
   sc.setDoPrint(true);
 
   double l0 = 10.0;
-  double v0 = 10.0;
+  double v0 = 1.0E+2;
   double rho0 = 1.1839; // kg/m3
   double nu = 0.2E-4; // m2/s
   double theta0 = 273.15;
   double theta1 = 1.0;
-  v0 = nu/l0;
 
   ScaleSet* ss = ScaleSet::get();
   ss->setScales(l0, v0, rho0, theta0, theta1);

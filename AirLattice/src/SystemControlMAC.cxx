@@ -25,6 +25,8 @@ int SystemControlMAC::initialize() {
   mLatticeIndexTool.initialize(mEnvironment);
   uniformHotspot2();
 
+  ScaleSet::get()->print();
+
   return 0;
 }
 
@@ -39,30 +41,31 @@ void SystemControlMAC::updateEnvironment(float dt) {
   // atmosphere.propertyAt(50, 0, 1).print();
   // atmosphere.propertyAt(51, 0, 1).print();
   int i1=0, i2=1, i3=2;
-  std::cout << "Field at (ix, iy, iz)=(49-51, 0, 0)" << std::endl;
-  atmosphere.propertyAt(i1, 0, 0).print();
-  atmosphere.propertyAt(i2, 0, 0).print();
-  atmosphere.propertyAt(i3, 0, 0).print();
+  // std::cout << "Field at (ix, iy, iz)=(49-51, 0, 0)" << std::endl;
+  // atmosphere.propertyAt(i1, 0, 0).print();
+  // atmosphere.propertyAt(i2, 0, 0).print();
+  // atmosphere.propertyAt(i3, 0, 0).print();
 
   int ncells = mLatticeIndexTool.NCells();
   mM.clear();
   mM.initialize(ncells, ncells);
   mB.assign(ncells, 0.0);
-  std::cout << "Update pressure (ncells=" << ncells << ")" << std::endl;
+
+  //  std::cout << "Update pressure (ncells=" << ncells << ")" << std::endl;
   loop(std::mem_fun(&SystemControlMAC::buildMatrixForP) );
-  printMatrix(mM);
-  printVector(mB);
-  std::cout << "Solve equation to obtain P" << std::endl;
+  // printMatrix(mM);
+  // printVector(mB);
+  //  std::cout << "Solve equation to obtain P" << std::endl;
   solveP();
 
-  std::cout << "Update velocity" << std::endl;
+  //  std::cout << "Update velocity" << std::endl;
   loop(std::mem_fun(&SystemControlMAC::updateVelocity) );
-  std::cout << "  -> update variables" << std::endl;
+  //  std::cout << "  -> update variables" << std::endl;
   loop(std::mem_fun(&SystemControlMAC::updateVariables) );
 
-  std::cout << "Update temperature" << std::endl;
+  //  std::cout << "Update temperature" << std::endl;
   loop(std::mem_fun(&SystemControlMAC::updateTemperature) );
-  std::cout << "  -> update variables" << std::endl;
+  //  std::cout << "  -> update variables" << std::endl;
   loop(std::mem_fun(&SystemControlMAC::updateVariables) );
 
 }
@@ -139,13 +142,15 @@ void SystemControlMAC::buildMatrixForP() {
   double pr = ss->Pr();
   double bc = ss->buoyancyCoefficient();
 
+  //  std::cout << " pr=" << pr << ", bc=" << bc << std::endl;
+ 
   b += divV(ix, iy, iz)/mDeltaTime;
   b += ( (pr*laplacianU(ix, iy, iz) - convU(ix, iy, iz) )
 	 - (pr*laplacianU(ix-1, iy, iz) - convU(ix-1, iy, iz) ) )/mDeltaX;
-  b += ( (pr*laplacianU(ix, iy, iz) - convU(ix, iy, iz) )
-	 - (pr*laplacianU(ix, iy-1, iz) - convU(ix, iy-1, iz) ) )/mDeltaY;
-  b += ( (pr*laplacianU(ix, iy, iz) - convU(ix, iy, iz) )
-	 - (pr*laplacianU(ix, iy, iz-1) - convU(ix, iy, iz-1) ) )/mDeltaZ;
+  b += ( (pr*laplacianV(ix, iy, iz) - convV(ix, iy, iz) )
+	 - (pr*laplacianV(ix, iy-1, iz) - convV(ix, iy-1, iz) ) )/mDeltaY;
+  b += ( (pr*laplacianW(ix, iy, iz) - convW(ix, iy, iz) )
+	 - (pr*laplacianW(ix, iy, iz-1) - convW(ix, iy, iz-1) ) )/mDeltaZ;
   b += (buoyancy(ix, iy, iz)-buoyancy(ix, iy, iz-1) )/mDeltaZ;
   mB[index0] = b;
 }
@@ -237,15 +242,15 @@ double SystemControlMAC::convV(int ix, int iy, int iz) {
 	    mEnvironment->w(ix,iy+1,iz) + mEnvironment->w(ix,iy+1,iz-1) )/4;
 
   double v_0, v_m1, v_p1;
-  v_0 = mEnvironment->u(ix, iy, iz);
+  v_0 = mEnvironment->v(ix, iy, iz);
 
-  v_m1 = mEnvironment->u(ix-1, iy, iz);
-  v_p1 = mEnvironment->u(ix+1, iy, iz);
+  v_m1 = mEnvironment->v(ix-1, iy, iz);
+  v_p1 = mEnvironment->v(ix+1, iy, iz);
   y += u*(v_p1 - v_m1)/(2*mDeltaX) 
     - std::fabs(u)*(v_p1 - 2*v_0 + v_m1)/(2*mDeltaX);
 
-  v_m1 = mEnvironment->u(ix, iy-1, iz);
-  v_p1 = mEnvironment->u(ix, iy+1, iz);
+  v_m1 = mEnvironment->v(ix, iy-1, iz);
+  v_p1 = mEnvironment->v(ix, iy+1, iz);
   y += v*(v_p1 - v_m1)/(2*mDeltaY) 
     - std::fabs(v)*(v_p1 - 2*v_0 + v_m1)/(2*mDeltaY);
 
@@ -266,20 +271,20 @@ double SystemControlMAC::convW(int ix, int iy, int iz) {
 	    mEnvironment->w(ix+1,iy,iz) + mEnvironment->w(ix+1,iy,iz-1) )/4;
 
   double w_0, w_m1, w_p1;
-  w_0 = mEnvironment->u(ix+1, iy, iz);
+  w_0 = mEnvironment->w(ix+1, iy, iz);
 
-  w_m1 = mEnvironment->u(ix-1, iy, iz);
-  w_p1 = mEnvironment->u(ix+1, iy, iz);
+  w_m1 = mEnvironment->w(ix-1, iy, iz);
+  w_p1 = mEnvironment->w(ix+1, iy, iz);
   y += u*(w_p1 - w_m1)/(2*mDeltaX) 
     - std::fabs(u)*(w_p1 - 2*w_0 + w_m1)/(2*mDeltaX);
 
-  w_m1 = mEnvironment->u(ix, iy-1, iz);
-  w_p1 = mEnvironment->u(ix, iy+1, iz);
+  w_m1 = mEnvironment->w(ix, iy-1, iz);
+  w_p1 = mEnvironment->w(ix, iy+1, iz);
   y += v*(w_p1 - w_m1)/(2*mDeltaY) 
     - std::fabs(v)*(w_p1 - 2*w_0 + w_m1)/(2*mDeltaY);
 
-  w_m1 = mEnvironment->u(ix, iy, iz-1);
-  w_p1 = mEnvironment->u(ix, iy, iz+1);
+  w_m1 = mEnvironment->w(ix, iy, iz-1);
+  w_p1 = mEnvironment->w(ix, iy, iz+1);
   y += w*(w_p1 - w_m1)/(2*mDeltaZ) 
     - std::fabs(w)*(w_p1 - 2*w_0 + w_m1)/(2*mDeltaZ);
   
@@ -293,20 +298,20 @@ double SystemControlMAC::convTheta(int ix, int iy, int iz) {
   double w=(mEnvironment->w(ix, iy, iz) + mEnvironment->w(ix, iy, iz-1) )/2;
 
   double t_0, t_m1, t_p1;
-  t_0 = mEnvironment->u(ix+1, iy, iz);
+  t_0 = mEnvironment->theta(ix, iy, iz);
 
-  t_m1 = mEnvironment->u(ix-1, iy, iz);
-  t_p1 = mEnvironment->u(ix+1, iy, iz);
+  t_m1 = mEnvironment->theta(ix-1, iy, iz);
+  t_p1 = mEnvironment->theta(ix+1, iy, iz);
   y += u*(t_p1 - t_m1)/(2*mDeltaX) 
     - std::fabs(u)*(t_p1 - 2*t_0 + t_m1)/(2*mDeltaX);
 
-  t_m1 = mEnvironment->u(ix, iy-1, iz);
-  t_p1 = mEnvironment->u(ix, iy+1, iz);
+  t_m1 = mEnvironment->theta(ix, iy-1, iz);
+  t_p1 = mEnvironment->theta(ix, iy+1, iz);
   y += v*(t_p1 - t_m1)/(2*mDeltaY) 
     - std::fabs(v)*(t_p1 - 2*t_0 + t_m1)/(2*mDeltaY);
 
-  t_m1 = mEnvironment->u(ix, iy, iz-1);
-  t_p1 = mEnvironment->u(ix, iy, iz+1);
+  t_m1 = mEnvironment->theta(ix, iy, iz-1);
+  t_p1 = mEnvironment->theta(ix, iy, iz+1);
   y += w*(t_p1 - t_m1)/(2*mDeltaZ) 
     - std::fabs(w)*(t_p1 - 2*t_0 + t_m1)/(2*mDeltaZ);
   
@@ -316,8 +321,8 @@ double SystemControlMAC::convTheta(int ix, int iy, int iz) {
 double SystemControlMAC::divV(int ix, int iy, int iz) {
   double y=0.0;
   y += (mEnvironment->u(ix,iy,iz)-mEnvironment->u(ix-1,iy,iz) )/mDeltaX;
-  y += (mEnvironment->u(ix,iy,iz)-mEnvironment->u(ix,iy-1,iz) )/mDeltaY;
-  y += (mEnvironment->u(ix,iy,iz)-mEnvironment->u(ix,iy,iz-1) )/mDeltaZ;
+  y += (mEnvironment->v(ix,iy,iz)-mEnvironment->v(ix,iy-1,iz) )/mDeltaY;
+  y += (mEnvironment->w(ix,iy,iz)-mEnvironment->w(ix,iy,iz-1) )/mDeltaZ;
   return y;
 }
 
@@ -472,7 +477,7 @@ void SystemControlMAC::uniformHotspot2() {
 	z = mEnvironment->z(iz);
 	AirProperty& ap = atmosphere.propertyAt(ix, iy, iz);
 	ap.setPressure(1.0);
-	ap.setTemperature(25);
+	ap.setTemperature(0.0);
 	ap.setVelocity(0.0, 0.0, 0.0);
 	ap.setDensity(rho);
 	ap.setVaporPressure(0.0);

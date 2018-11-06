@@ -1,6 +1,7 @@
 /*
   ScaleSet.cxx
 */
+#include <iostream>
 #include "AirLattice/ScaleSet.hxx"
 #include "AirLattice/Constants.hxx"
 
@@ -60,5 +61,26 @@ double ScaleSet::fromDimLess(double x, ScaleSet::PropertyType tp) {
 
 double ScaleSet::buoyancyCoefficient() const {
   return mBeta*mTheta1*mG/mAcceleration;
+}
+
+void ScaleSet::print() const {
+  std::cout << "Scale set" << std::endl;
+  std::cout << "  L            : " << mL << std::endl;
+  std::cout << "  V            : " << mV << std::endl;
+  std::cout << "  T            : " << mT << std::endl;
+  std::cout << "  Acceleration : " << mAcceleration << std::endl;
+  std::cout << "  g            : " << mG << std::endl;
+  std::cout << "  Theta0       : " << mTheta0 << std::endl;
+  std::cout << "  Theta1       : " << mTheta1 << std::endl;
+  std::cout << "  P            : " << mP << std::endl;
+  std::cout << "  kappa        : " << mKappa << std::endl;
+  std::cout << "  Cp           : " << mCp << std::endl;
+  std::cout << "  rho          : " << mRho << std::endl;
+  std::cout << "  nu           : " << mNu << std::endl;
+  std::cout << "  beta0        : " << mBeta << std::endl;
+  std::cout << "  kappa/(Cp*rho) : " << (mKappa/(mCp*mRho) ) << std::endl;
+  std::cout << "  Re           : " << mRe << std::endl;
+  std::cout << "  Pr           : " << mPr << std::endl;
+  std::cout << "  B            : " << (mBeta*mTheta1*mG)/mAcceleration << std::endl;
 }
 

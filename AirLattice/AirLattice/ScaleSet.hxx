@@ -33,13 +33,15 @@ public:
   double acceleration() const { return mAcceleration; }
 
   double kappa() const { return mKappa; }
-  double cp() const { return mCp; }
+  double Cp() const { return mCp; }
   double rho() const { return mRho; }
   double beta() const { return mBeta; }
   double g() const { return mG; }
   double Re() const { return mRe; }
   double Pr() const { return mPr; }
   double buoyancyCoefficient() const;
+
+  void print() const;
 
 protected:
   double mL; // Length 

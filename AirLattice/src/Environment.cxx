@@ -123,8 +123,9 @@ double Environment::theta(int ix, int iy, int iz) const {
     const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, iz);
     value = p1.T();
   } else if (iz==-1) {
+    const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, 0);
     const SurfaceProperty& p2 = mSurfaceState.propertyAt(ix, iy);
-    value = p2.T();
+    value = 2*p2.T()-p1.T();
   } else if (iz == mNPoints[2]) {
     const AirProperty& p1 = mAtmosphere.propertyAt(ix, iy, mNPoints[2]-1);
     value = p1.T();
