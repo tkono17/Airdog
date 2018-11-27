@@ -113,7 +113,7 @@ protected:
   bool isAtBoundarySite(boundary_t bt) const;
 
 protected:
-  double mNTimePoints;
+  int mNTimePoints;
   double mDeltaTime;
   int mTimeStep;
   int mRecordInterval;

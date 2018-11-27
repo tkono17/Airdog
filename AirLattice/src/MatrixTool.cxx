@@ -109,8 +109,8 @@ int solveGausJordanBand3(SparseMatrix& m, std::vector<double>& b) {
 
 int solveGausSeidel(SparseMatrix& m, std::vector<double>& b) {
   int ok=0;
-  int ntry_max=10000;
-  const double eps=1.0E-8;
+  int ntry_max=100;
+  const double tol=1.0;
   int itry=0;
   bool done=false;
 
@@ -126,6 +126,7 @@ int solveGausSeidel(SparseMatrix& m, std::vector<double>& b) {
   std::vector<int>::const_iterator pc;
 
   while (!done) {
+    //    std::cout << "Gauss-Seidel method try: " << itry << std::endl;
     dxmax = 0.0;
     for (i=0; i<n; ++i) {
       y = b[i];
@@ -138,15 +139,76 @@ int solveGausSeidel(SparseMatrix& m, std::vector<double>& b) {
 	}
       }
       x2 = y/m.getValue(i, i);
-      dx = x2 - x[i];
-      if (std::fabs(dx) > dxmax) dxmax = dx;
+      dx = std::fabs(x2 - x[i]);
+      if (dx > dxmax) dxmax = dx;
       x[i] = x2;
     }
-    if (dxmax < eps) done = true;
+    //    std::cout << "itry=" << itry << " dxmax=" << dxmax << " compared to tolerance=" << tol << std::endl;
+    if (dxmax < tol) done = true;
 
     itry ++;
     if (itry >= ntry_max) done = true;
   }
+  //  std::cout << "Gaus-Seidel method finished with " << itry << " tries" << std::endl;
+
+  for (i=0; i<n; ++i) {
+    b[i] = x[i];
+  }
+
+  return ok;
+}
+
+int solveSOR(SparseMatrix& m, std::vector<double>& b, 
+	     const std::vector<double>& xinit, double omega) {
+  int ok=0;
+  int ntry_max=2000;
+  const double tol=1.0;
+  int itry=0;
+  bool done=false;
+
+  int n = b.size();
+  int i, j;
+  double y=0.0;
+  double x2=0.0;
+  double dx=0.0, dxmax=0.0;
+
+  std::vector<double> x;
+  x.assign(n, 1.0);
+  std::vector<int> columns;
+  std::vector<int>::const_iterator pc;
+  double dxnorm=0.0;
+
+  for (i=0; i<n; ++i) {
+    x[i] = xinit[i];
+  }
+  while (!done) {
+    //    std::cout << "Gauss-Seidel method try: " << itry << std::endl;
+    dxmax = 0.0;
+    dxnorm = 0.0;
+    for (i=0; i<n; ++i) {
+      y = b[i];
+      SparseVector& sv = m.rowVector(i);
+      columns = sv.columnsWithValues();
+      for (pc=columns.begin(); pc!=columns.end(); ++pc) {
+	j = *pc;
+	if (j != i) {
+	  y -= sv.getValue(j)*x[j];
+	}
+      }
+      x2 = (y/m.getValue(i, i) - x[i]);
+      dx = std::fabs(x2);
+      dxnorm += dx*dx;
+      if (dx > dxmax) dxmax = dx;
+      x[i] += omega*x2;
+    }
+    //    std::cout << "itry=" << itry << " dxmax=" << dxmax << " compared to tolerance=" << tol << std::endl;
+    if (dxnorm < tol) done = true;
+
+    itry ++;
+    if (itry >= ntry_max) done = true;
+  }
+  std::cout << "SOR method finished with " << itry << " tries, dxnorm="
+	    << dxnorm << ", dxmax=" << dxmax << std::endl;
 
   for (i=0; i<n; ++i) {
     b[i] = x[i];

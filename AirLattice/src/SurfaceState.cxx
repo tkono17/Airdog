@@ -53,6 +53,8 @@ const SurfaceProperty& SurfaceState::propertyAt(int ix, int iy) const {
 }
 
 void SurfaceState::dump() {
+  std::cout << "SurfaceState nx, ny=(" << mNPoints[0] << ", " 
+	    << mNPoints[1] << ")" << std::endl;
 }
 
 

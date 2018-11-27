@@ -1,6 +1,7 @@
 /*
   LatticeIndexTool.cxx
 */
+#include <iostream>
 #include "AirLattice/LatticeIndexTool.hxx"
 
 LatticeIndexTool::LatticeIndexTool() : mEnvironment(0) {

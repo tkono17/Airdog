@@ -12,6 +12,8 @@
 #include "AirLattice/SystemControl.hxx"
 #include "AirLattice/SparseMatrix.hxx"
 #include "AirLattice/LatticeIndexTool.hxx"
+#include "AirLattice/LinearSolver.hxx"
+#include "TRandom3.h"
 
 class SystemControlMAC : public SystemControl {
 public:
@@ -62,6 +64,8 @@ protected:
 private:
   SparseMatrix mM;
   std::vector<double> mB;
+  std::vector<double> mPVec;
+  LinearSolver mLinearSolver;
   LatticeIndexTool mLatticeIndexTool;
 
   AirProperty* mAPx1y1;
@@ -86,7 +90,7 @@ private:
   double mParameterNu;
   double mParameterG;
 
-
+  TRandom3 mRandom;
 };
 
 #endif // __SystemControlMAC_hxx__

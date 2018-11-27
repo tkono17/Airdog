@@ -18,6 +18,12 @@ int solveGausJordan(SparseMatrix& m, std::vector<double>& b);
 int solveGausJordanBand3(SparseMatrix& m, std::vector<double>& b);
 
 /**
+   Solve the matrix equation m*x = b by SOR method
+ */
+int solveSOR(SparseMatrix& m, std::vector<double>& b, 
+	     const std::vector<double>& xinit, double omega=1.2);
+
+/**
    Solve the matrix equation m*x = b by Gaus-Seidel method.
  */
 int solveGausSeidel(SparseMatrix& m, std::vector<double>& b);

@@ -7,6 +7,8 @@
 #include "AirLattice/Atmosphere.hxx"
 #include "AirLattice/SurfaceState.hxx"
 #include "AirLattice/PropertyType.hxx"
+#include "AirLattice/BoundaryCondition.hxx"
+#include "AirLattice/BoundaryCell.hxx"
 
 class Environment {
 public:
@@ -14,7 +16,10 @@ public:
   ~Environment();
 
   Atmosphere& atmosphere() { return mAtmosphere; }
-  SurfaceState& surfaceState() { return mSurfaceState; }
+  SurfaceState& surfaceState() { return *(mSurfaceStates[BoundaryCell::kZLow]); }
+  SurfaceState* surfaceState(BoundaryCell::Location loc) {
+    return mSurfaceStates[loc];
+  }
 
   void setNPoints(int nx, int ny, int nz);
   void setSystemSize(double sx, double sy, double sz);
@@ -37,6 +42,14 @@ public:
   double v(int ix, int iy, int iz) const;
   double w(int ix, int iy, int iz) const;
 
+  bool isBoundary(int ix, int iy, int iz) const;
+
+  BoundaryCell::Location surfaceLocation(int ix, int iy, int iz) const;
+
+  const SurfaceProperty& surfacePropertyAt(int ix, int iy, int iz) const;
+
+  const AirProperty& innerPropertyAt(int ix, int iy, int iz) const;
+
   int freeData();
 
   void dump();
@@ -47,8 +60,9 @@ private:
   double mElementSize[3];
 
   Atmosphere mAtmosphere;
-  SurfaceState mSurfaceState;
+  SurfaceState* mSurfaceStates[6];
   int mTimeStep;
+  BoundaryCondition mBoundaryCondition; // Boundary condition flags
 };
 
 #endif // __Environment_hxx__

@@ -25,6 +25,10 @@ include_directories(${PROJECT_BINARY_DIR})
 #####-------------------------------------------------------------
 ##### Package dependencies
 #####-------------------------------------------------------------
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+list(APPEND LIBS ${EIGEN3_LIBRARIES})
+
 # ROOT stuffs
 set(ROOT_COMPONENTS_TO_USE Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread)
 find_package(ROOT 

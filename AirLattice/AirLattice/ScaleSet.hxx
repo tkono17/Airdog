@@ -3,6 +3,7 @@
 /*
   ScaleSet.hxx
 */
+#include <string>
 
 class ScaleSet {
 public:
@@ -28,20 +29,28 @@ public:
   double t() const { return mT; }
   double v() const { return mV; }
   double p() const { return mP; }
+  double rho() const { return mRho; }
   double theta0() const { return mTheta0; }
   double theta1() const { return mTheta1; }
   double acceleration() const { return mAcceleration; }
 
   double kappa() const { return mKappa; }
+  double nu() const { return mNu; }
   double Cp() const { return mCp; }
-  double rho() const { return mRho; }
   double beta() const { return mBeta; }
   double g() const { return mG; }
   double Re() const { return mRe; }
   double Pr() const { return mPr; }
   double buoyancyCoefficient() const;
+  double parameterA() const;
 
   void print() const;
+
+  std::string format(const std::string& pname, const std::string& unit, 
+		     double value_dimful, double factor_todimful=-1.0) const;
+
+  void printFormat(const std::string& pname, const std::string& unit, 
+		   double value_dimful, double factor_todimful=-1.0) const;
 
 protected:
   double mL; // Length 
@@ -60,6 +69,9 @@ protected:
   double mG; // Gravitational acceleration g
   double mRe; // Reynolds number
   double mPr; // Prandl number
+  // Derived parameters
+  double mParameterA;
+  double mParameterB;
 };
 
 #endif // __ScaleSet_hxx__

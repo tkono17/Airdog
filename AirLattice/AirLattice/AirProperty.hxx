@@ -58,7 +58,6 @@ public:
     return mCellBC;
   }
 
-
   // Material characteristic
   void setMolecularWeight(double x) { mMolecularWeight = x; }
   void setSpecificHeat(double x) { mSpecificHeat = x; }

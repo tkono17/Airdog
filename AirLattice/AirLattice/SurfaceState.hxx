@@ -20,7 +20,7 @@ public:
 
 private:
   int mNPoints[2];
-
+  
   SurfaceProperty** mSurfaceData;
 };
 
