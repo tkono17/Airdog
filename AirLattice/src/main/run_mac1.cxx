@@ -12,6 +12,10 @@ int main(int argc, char* argv[]) {
   double dT=1.0E-8;
   double NT=1000;
 
+  if (argc == 1) {
+    std::cout << argv[0] << " <deltaT> <N_timestep>" << std::endl;
+    std::exit(1);
+  }
   if (argc > 1) {
     std::sscanf(argv[1], "%e", &dT);
   }
@@ -43,12 +47,10 @@ int main(int argc, char* argv[]) {
   sc.setEnvironment(&env);
   sc.setRecorder(&recorder);
 
-  //  sc.setDeltaTime(60);
   sc.setDeltaTime(dT);
   sc.setNTimePoints(NT);
   sc.setRecordInterval(100);
 
-  sc.setNTimePoints(100);
   sc.setRecordInterval(1);
   sc.setDoPrint(true);
 

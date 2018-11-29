@@ -80,7 +80,7 @@ void EnvRecorder::saveXY(int iz, int timestep, PropertyType pt) {
   ny = np[1];
   nz = np[2];
 
-  std::sprintf(hname, "h_%s_XY_z%04d_t%04d", 
+  std::sprintf(hname, "h_%s_XY_z%04d_t%08d", 
 	       propertyName(pt).c_str(), iz, timestep);
   TH2F* h = new TH2F(hname, "", nx, 0, nx, ny, 0, ny);
   h->SetDirectory(mOutFile);
@@ -107,7 +107,7 @@ void EnvRecorder::saveYZ(int ix, int timestep, PropertyType pt) {
   ny = np[1];
   nz = np[2];
 
-  std::sprintf(hname, "h_%s_YZ_x%04d_t%04d", 
+  std::sprintf(hname, "h_%s_YZ_x%04d_t%08d", 
 	       propertyName(pt).c_str(), ix, timestep);
   TH2F* h = new TH2F(hname, "", ny, 0, ny, nz, 0, nz);
   h->SetDirectory(mOutFile);
