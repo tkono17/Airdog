@@ -264,7 +264,7 @@ void SystemControlMAC::solveP() {
   //  std::cout << "run Gauss-Seidel method" << std::endl;
 
   //  solveSOR(mM, mB, mPVec, 1.9);
-  solveGausSeidel(mM, mB, mPVec, 1.9);
+  solveGausSeidel(mM, mB);
   //  std::cout << "Done running Gauss-Seidel method" << std::endl;
   unsigned int n=mB.size();
   unsigned int i;
