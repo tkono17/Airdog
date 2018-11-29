@@ -53,7 +53,7 @@ void EnvRecorder::saveXZ(int iy, int timestep, PropertyType pt) {
   ny = np[1];
   nz = np[2];
 
-  std::sprintf(hname, "h_%s_XZ_y%04d_t%04d", 
+  std::sprintf(hname, "h_%s_XZ_y%04d_t%08d", 
 	       propertyName(pt).c_str(), iy, timestep);
   TH2F* h = new TH2F(hname, "", nx, 0, nx, nz, 0, nz);
   h->SetDirectory(mOutFile);
